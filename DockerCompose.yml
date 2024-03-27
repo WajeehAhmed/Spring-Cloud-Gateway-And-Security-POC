@@ -35,7 +35,14 @@ services:
       - MYSQL_HOST=LibraryContainer
       - MYSQL_PORT=3306
       - EUREKA_HOST=EurekaServer
-
+  gatewayServer:
+    image: gatewayserver:latest
+    ports:
+      - '3311:8083'
+    depends_on:
+      - eurekaServer
+    environment:
+      - EUREKA_HOST=EurekaServer
 
 
 volumes:
