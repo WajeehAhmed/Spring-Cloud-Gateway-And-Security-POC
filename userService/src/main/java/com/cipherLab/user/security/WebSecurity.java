@@ -26,10 +26,39 @@ public class WebSecurity {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+//    @Bean
+//    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+//
+////         Configure AuthenticationManagerBuilder
+//        AuthenticationManagerBuilder authenticationManagerBuilder =
+//                http.getSharedObject(AuthenticationManagerBuilder.class);
+//
+//        authenticationManagerBuilder.userDetailsService(userService)
+//                .passwordEncoder(bCryptPasswordEncoder);
+//
+//        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+//        AuthenticationFilter authenticationFilter =
+//                new AuthenticationFilter(userService, environment, authenticationManager);
+//        authenticationFilter.setFilterProcessesUrl(environment.getProperty("login.url.path"));
+//        http.authorizeHttpRequests((authz) -> authz
+//                        .requestMatchers(new AntPathRequestMatcher("/users", "POST")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/users/{id}", "GET")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll())
+//                .addFilter(authenticationFilter)
+//                .authenticationManager(authenticationManager)
+//                .sessionManagement((session) -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//
+//        http.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.sameOrigin()));
+//        http.csrf((csrf) -> csrf.disable());
+//        return http.build();
+//
+//    }
+
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
-//         Configure AuthenticationManagerBuilder
+        // Configure AuthenticationManagerBuilder
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
@@ -37,12 +66,17 @@ public class WebSecurity {
                 .passwordEncoder(bCryptPasswordEncoder);
 
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+
+        // Create AuthenticationFilter
         AuthenticationFilter authenticationFilter =
                 new AuthenticationFilter(userService, environment, authenticationManager);
+//        authenticationFilter.setFilterProcessesUrl(environment.getProperty("login.url.path"));
+
+        http.csrf((csrf) -> csrf.disable());
 
         http.authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(new AntPathRequestMatcher("/users", "POST")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/users/{id}", "GET")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/users/{id}", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll())
                 .addFilter(authenticationFilter)
                 .authenticationManager(authenticationManager)
@@ -50,7 +84,6 @@ public class WebSecurity {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.sameOrigin()));
-        http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
 
     }

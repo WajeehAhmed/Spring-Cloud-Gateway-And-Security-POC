@@ -1,4 +1,4 @@
-package com.cipherLab.user.Entity;
+package com.cipherLab.user.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

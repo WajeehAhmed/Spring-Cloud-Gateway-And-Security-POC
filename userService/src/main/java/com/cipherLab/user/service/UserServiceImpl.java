@@ -1,8 +1,8 @@
 package com.cipherLab.user.service;
 
-import com.cipherLab.user.Entity.UserEntity;
-import com.cipherLab.user.Exception.UserNotFoundException;
-import com.cipherLab.user.Repository.UserRepository;
+import com.cipherLab.user.entity.UserEntity;
+import com.cipherLab.user.exception.UserNotFoundException;
+import com.cipherLab.user.repository.UserRepository;
 import com.cipherLab.user.dto.UserDto;
 import com.cipherLab.user.dto.UserResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,6 +31,27 @@ public class UserServiceImpl implements UserService {
         userEntity.setLastName(userDto.getLastName());
         userEntity.setEncryptedPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(userEntity);
+    }
+
+    public void deleteUser(Long id) {
+        var user = userRepository.findById(id);
+        if (user.isEmpty()) throw new UserNotFoundException(id);
+        else {
+            userRepository.deleteById(id);
+        }
+    }
+
+    public void updateUser(UserDto userDto, Long id) {
+        Optional<UserEntity> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException(id);
+        } else {
+            var oldUser = userOptional.get();
+            oldUser.setFirstName(userDto.getFirstName() != null ? userDto.getFirstName() : oldUser.getFirstName());
+            oldUser.setLastName(userDto.getLastName() != null ? userDto.getLastName() : oldUser.getLastName());
+            oldUser.setEmail(userDto.getEmail() != null ? userDto.getEmail() : oldUser.getEmail());
+            userRepository.save(oldUser);
+        }
     }
 
     public UserResponseDto getUserById(Long id) {
@@ -60,4 +82,5 @@ public class UserServiceImpl implements UserService {
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), true,
                 true, true, true, new ArrayList<>());
     }
+
 }

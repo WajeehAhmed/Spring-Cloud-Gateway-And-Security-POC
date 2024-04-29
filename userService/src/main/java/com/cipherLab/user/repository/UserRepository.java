@@ -1,6 +1,6 @@
-package com.cipherLab.user.Repository;
+package com.cipherLab.user.repository;
 
-import com.cipherLab.user.Entity.UserEntity;
+import com.cipherLab.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

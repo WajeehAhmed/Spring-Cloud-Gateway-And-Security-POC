@@ -1,4 +1,4 @@
-package com.cipherLab.user.Exception;
+package com.cipherLab.user.exception;
 
 import com.cipherLab.user.dto.ErrorResponseDto;
 import org.springframework.http.HttpHeaders;

@@ -1,4 +1,4 @@
-package com.cipherLab.user.Exception;
+package com.cipherLab.user.exception;
 
 public class UserNotFoundException extends RuntimeException{
     public UserNotFoundException(Long id) {
